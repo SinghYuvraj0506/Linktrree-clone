@@ -1,29 +1,34 @@
 import jwt, { JwtPayload } from "jsonwebtoken";
-import moment from "moment";
 import bcrypt from "bcryptjs";
+import ApiError from "./ApiError";
+import prisma from "../config/db.config";
 
-export const getJWTFromPayload = (payload: JwtPayload) => {
+export const generateAccessAndRefreshTokens = async (payload: JwtPayload) => {
   try {
-    const res = jwt.sign(payload, process.env.JWT_SECRET as string, {
-      expiresIn: "10 days",
+    const accessToken = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET as string, {
+      expiresIn: process.env.ACCESS_TOKEN_EXPIRY,
     });
-    return { token: res, expiry: moment().add(10, "day").valueOf() };
-  } catch (error) {
-    console.log("Error in signing jwt");
-    return false;
-  }
-};
+    const refreshToken = jwt.sign(payload, process.env.REFRESH_TOKEN_SECRET as string, {
+      expiresIn: process.env.REFRESH_TOKEN_EXPIRY,
+    });
 
-export const decodeJWT = (token: string) => {
-  try {
-    const decodedInfo = jwt.verify(token, process.env.JWT_SECRET as string);
+    if(!payload?.email){
+      throw new Error("Invalid Request")
+    }
 
-    return decodedInfo as { id: string };
+    await prisma.user.update({
+      where:{email:payload?.email},
+      data:{
+        refreshToken
+      }
+    })
+
+    return {accessToken, refreshToken};
   } catch (error) {
-    console.log("Error in signing jwt");
-    return false;
+    console.log(error)
+    throw new ApiError(500, "Something went wrong in authorization");
   }
-};
+}
 
 export const hashPassword = async (password: string) => {
   try {
@@ -35,6 +40,7 @@ export const hashPassword = async (password: string) => {
     return false;
   }
 };
+
 
 export const comparePassword = async (hash: string, password: string) => {
   try {

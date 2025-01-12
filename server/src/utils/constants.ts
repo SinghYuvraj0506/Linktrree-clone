@@ -1,6 +1,6 @@
 import { CookieOptions } from "express";
 
-export const cookieALlOptions: () => CookieOptions = () => {
+const cookieALlOptions: () => CookieOptions = () => {
     if (process.env.NODE_ENV === "development"){
       return {
         httpOnly: true,
@@ -19,3 +19,5 @@ export const cookieALlOptions: () => CookieOptions = () => {
       };
     }
   }
+
+  export const cookieOption = cookieALlOptions()

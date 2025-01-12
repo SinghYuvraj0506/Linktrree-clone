@@ -8,7 +8,8 @@ declare global {
       user?: {
         id: string;
         email?:string;
-        name?: string
+        name?: string;
+        status: int
       }
     }
   }
