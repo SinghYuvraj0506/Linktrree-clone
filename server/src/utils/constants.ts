@@ -21,3 +21,24 @@ const cookieALlOptions: () => CookieOptions = () => {
   }
 
   export const cookieOption = cookieALlOptions()
+
+  export const swaggerOptions = {
+    definition: { 
+      openapi: '3.1.0',
+      info: {
+        title: 'Employee API',
+        description: 'Employee API Information',
+        version: '1.0.0',
+        contact: {
+          name: 'Sagi Weizmann',
+        },
+      },
+      servers: [
+        {
+          url: "http://localhost:5000",
+        },
+      ],
+    },
+    apis: ['./routes/*.js'],
+  };
+  

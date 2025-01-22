@@ -4,6 +4,8 @@ import cookieParser from "cookie-parser"
 import ErrorMiddleware from "./middlewares/error.middleware";
 import ApiError from "./utils/ApiError"
 import router from "./routes";
+import swaggerUi from 'swagger-ui-express';
+import { swaggerOptions } from "./utils/constants";
 
 const app = express();
 
@@ -18,11 +20,14 @@ app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ extended: true }));
 
 app.get("/healthcheck", (req, res) => {
-  res.send("Hello guys welcome to backend server");
+  res.send("Hello guys welcome to wave server");
 });
 
 // routes -------------------
 app.use("/api/v1", router());
+
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerOptions));
+
 
 // 404 route handler
 app.all("*", (req: Request, res: Response) => {
@@ -31,5 +36,6 @@ app.all("*", (req: Request, res: Response) => {
 
 // handle Error Responses ---
 app.use(ErrorMiddleware as any)
+
 
 export default app;

@@ -1,5 +1,5 @@
 -- CreateEnum
-CREATE TYPE "ACCOUNT_PROVIDER" AS ENUM ('GOOGLE');
+CREATE TYPE "ACCOUNT_PROVIDER" AS ENUM ('GOOGLE', 'CREDENTIALS');
 
 -- CreateTable
 CREATE TABLE "users" (
@@ -9,6 +9,8 @@ CREATE TABLE "users" (
     "name" TEXT NOT NULL,
     "image" TEXT,
     "provider" "ACCOUNT_PROVIDER" NOT NULL,
+    "refreshToken" TEXT,
+    "status" INTEGER NOT NULL DEFAULT 1,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 

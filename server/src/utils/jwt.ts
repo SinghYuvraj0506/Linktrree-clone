@@ -36,8 +36,8 @@ export const hashPassword = async (password: string) => {
 
     return hashedPassword;
   } catch (error) {
-    console.log("Error in hashing password");
-    return false;
+    console.log(error)
+    throw new ApiError(500, "Error in hashing password");
   }
 };
 
@@ -48,7 +48,7 @@ export const comparePassword = async (hash: string, password: string) => {
 
     return bool;
   } catch (error) {
-    console.log("Error in comparing password");
-    return false;
+    console.log(error)
+    throw new ApiError(500, "Error in comparing password");
   }
 };
