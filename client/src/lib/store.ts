@@ -1,10 +1,12 @@
 import { configureStore } from '@reduxjs/toolkit'
 import { useDispatch, useSelector } from 'react-redux'
 import authReducer, {authActions} from "./features/authSlice"
+import linkReducer from "./features/linksSlice"
 
 export const store = configureStore({
   reducer: {
-    auth:authReducer
+    auth:authReducer,
+    links: linkReducer
   },
 })
 

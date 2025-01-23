@@ -28,3 +28,14 @@ export const templates = [
         description: "Professional business layout with location focus"
     }
 ]
+
+
+// const iconsData = {
+//     { icon: Twitter, label: "Share on X" },
+//     { icon: LinkIcon, label: "Copy link" },
+//     { icon: Mail, label: "Share via email" },
+//     { icon: Star, label: "Add to favorites" },
+//     { icon: Share2, label: "Share" },
+//     { icon: ShoppingBag, label: "Add to shop" },
+//     { icon: BarChart, label: "View analytics" },
+// }

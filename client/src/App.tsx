@@ -8,9 +8,9 @@ import Register from "./pages/auth/Register";
 import { useAppSelector } from "./lib/store";
 import Dashboard from "./pages/dashboard/Dashboard";
 import NotFoundPage from "./pages/NotFound";
-import UpdateSlugComponent from "./pages/onboarding/UpdateSlug";
 import OnboardingLayout from "./layouts/OnboardingLayout";
-import UpdateSlug from "./pages/onboarding/UpdateSlug";
+import DashboardLayout from "./layouts/DashboardLayout";
+import AuthLayout from "./layouts/Authlayout";
 
 const router = (isAuthenticated: boolean, loading: boolean) => {
   return createBrowserRouter([
@@ -37,7 +37,9 @@ const router = (isAuthenticated: boolean, loading: boolean) => {
           navigateTo="/dashboard"
           allowed={!isAuthenticated}
           // loading={loading}
-        />
+        >
+          <AuthLayout />
+        </ProtectRoutes>
       ),
       children: [
         {
@@ -57,7 +59,9 @@ const router = (isAuthenticated: boolean, loading: boolean) => {
           navigateTo="/"
           allowed={isAuthenticated}
           loading={loading}
-        />
+        >
+          <DashboardLayout />
+        </ProtectRoutes>
       ),
       children: [
         {
@@ -77,20 +81,20 @@ const router = (isAuthenticated: boolean, loading: boolean) => {
       ),
       children: [
         {
-          index:true,
+          index: true,
           element: <OnboardingLayout />,
         },
       ],
     },
     {
       path: "*",
-      element:<NotFoundPage/>
+      element: <NotFoundPage />,
     },
   ]);
 };
 
 function App() {
-  const {user, loading} = useAppSelector(state => state.auth);
+  const { user, loading } = useAppSelector((state) => state.auth);
 
   return (
     <div className="w-full h-full">

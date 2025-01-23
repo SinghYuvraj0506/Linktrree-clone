@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { LINKTYPE } from "./types";
 
 export const loginFormSchema = z.object({
   email: z
@@ -38,4 +39,16 @@ export const onboardProfileFormSchema = z.object({
   name: z.string({required_error:"Name is required"}).min(1,"Enter a valid name"),
   image: z.string({required_error:"Image is required"}).url("Enter valid image url"),
   desc: z.string().optional(),
+});
+
+
+export const createLinkSchema = z.object({
+    title: z
+      .string()
+      .trim()
+      .min(1, "Title must contain atleast 1 character")
+      .max(300, "Title cannot be greater than 300 characters"),
+    url: z.string().url("Enter valid url"),
+    order: z.number(),
+    type: z.nativeEnum(LINKTYPE)
 });

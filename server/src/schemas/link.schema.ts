@@ -13,3 +13,18 @@ export const createLinkSchema = z.object({
       type: z.nativeEnum(LINKS_TYPE)
     })
   });
+
+
+export const updateLinkSchema = z.object({
+    body:z.object({
+      title: z
+        .string()
+        .trim()
+        .min(1, "Title must contain atleast 1 character")
+        .max(300, "Title cannot be greater than 300 characters").optional(),
+      url: z.string().url("Enter valid url").optional(),
+      order: z.number().optional(),
+      type: z.nativeEnum(LINKS_TYPE).optional(),
+      active: z.boolean().optional()
+    })
+  });

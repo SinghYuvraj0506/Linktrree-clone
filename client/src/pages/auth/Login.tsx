@@ -18,7 +18,6 @@ import { useAppDispatch, useAppSelector } from "@/lib/store";
 import { useToast } from "@/hooks/use-toast";
 import { authActions } from "@/lib/features/authSlice";
 import { useEffect } from "react";
-import AuthLayout from "../../layouts/Authlayout";
 
 
 const Login = () => {
@@ -113,8 +112,4 @@ const Login = () => {
   );
 };
 
-const LoginComponent = () => {
-  return <AuthLayout children={<Login/>}/>
-}
-
-export default LoginComponent;
+export default Login;

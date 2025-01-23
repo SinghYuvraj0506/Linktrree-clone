@@ -3,7 +3,7 @@ import asyncHandler from "../utils/asyncHandler";
 import { z } from "zod";
 import prisma from "../config/db.config";
 import ApiResponse from "../utils/ApiResponse";
-import { createLinkSchema } from "../schemas/link.schema";
+import { createLinkSchema, updateLinkSchema } from "../schemas/link.schema";
 
 export const getUserLinks = asyncHandler(async (req: Request, res: Response) => {
   const userId = req.user?.id
@@ -41,8 +41,8 @@ export const createLinks = asyncHandler(async (req: Request, res: Response) => {
 export const updateLink = asyncHandler(async (req: Request, res: Response) => {
   const linkId = req.params.id;
   const {
-    body: { order, title, type, url },
-  }: z.infer<typeof createLinkSchema> = req;
+    body: { order, title, type, url, active },
+  }: z.infer<typeof updateLinkSchema> = req;
 
   let link = await prisma.link.update({
     where: { id: linkId },
@@ -51,6 +51,7 @@ export const updateLink = asyncHandler(async (req: Request, res: Response) => {
       title,
       type,
       url,
+      active,
       userId: req.user?.id as string,
     },
   });

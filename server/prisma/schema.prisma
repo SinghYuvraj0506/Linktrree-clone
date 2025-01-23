@@ -36,6 +36,7 @@ model Link {
   order Int
 
   type LINKS_TYPE
+  active  Boolean  @default(true)
 
   created_at DateTime @default(now())
   updated_at DateTime @default(now()) @updatedAt
@@ -78,12 +79,6 @@ enum ACCOUNT_PROVIDER {
 }
 
 enum LINKS_TYPE {
-  LINKEDIN
-  TWITTER
-  FACEBOOK
-  PORTFOLIO
-  DISCORD
-  TELEGRAM
-  YOUTUBE
+  SOCIAL
   OTHERS
 }
