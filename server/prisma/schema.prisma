@@ -24,6 +24,7 @@ model User {
   slug String @unique
 
   links Link[]
+  analytics LinkClicks[]
 
   @@map("users")
 }
@@ -42,7 +43,33 @@ model Link {
   userId String
   user   User   @relation(fields: [userId], references: [id])
 
+  analytics LinkClicks[]
+
   @@map("links")
+}
+
+model LinkClicks {
+  id    String @id @default(cuid())
+
+  ip    String?
+  country String?
+  region  String?
+  timezone  String?
+  city  String?
+  ll  String[]
+
+  slug  String?
+
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now()) @updatedAt
+
+  linkId  String?
+  link    Link? @relation(fields: [linkId], references: [id])
+
+  userId String?
+  user   User?   @relation(fields: [userId], references: [id])
+
+  @@map("linksClicks")
 }
 
 enum ACCOUNT_PROVIDER {

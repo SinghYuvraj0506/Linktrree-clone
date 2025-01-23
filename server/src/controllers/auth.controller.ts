@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import asyncHandler from "../utils/asyncHandler";
 import { z } from "zod";
-import { loginUserSchema, registerUserSchema } from "../schemas/auth.schema";
+import { loginUserSchema, registerUserSchema,updateUserSchema } from "../schemas/auth.schema";
 import prisma from "../config/db.config";
 import {
   comparePassword,
@@ -13,7 +13,6 @@ import ApiError from "../utils/ApiError";
 import ApiResponse from "../utils/ApiResponse";
 import { google } from "googleapis";
 import axios from "axios";
-import { JwtPayload } from "jsonwebtoken";
 import jwt from "jsonwebtoken";
 
 const googleOAuthClient = new google.auth.OAuth2(
@@ -36,6 +35,7 @@ export const authGoogle = asyncHandler((req: Request, res: Response) => {
 
   return res.redirect(authorizationUrl);
 });
+
 
 export const googleCallback = asyncHandler(
   async (req: Request, res: Response) => {
@@ -66,11 +66,9 @@ export const googleCallback = asyncHandler(
           name: profile?.name,
           image: profile?.picture,
           provider: "GOOGLE",
+          slug: profile?.name?.split(" ").join("_").toLowerCase()
         },
-        update: {
-          name: profile?.name,
-          image: profile?.picture,
-        },
+        update: {},
       });
 
       const { accessToken, refreshToken } =
@@ -126,6 +124,7 @@ export const registerUser = asyncHandler(
         email,
         password: newPassword,
         provider: "CREDENTIALS",
+        slug: name?.split(" ").join("_").toLowerCase()
       },
     });
 
@@ -270,6 +269,54 @@ export const refreshAccessToken = asyncHandler(
         .json(new ApiResponse(200, {}, "Access Token Refreshed"));
     } catch (error: any) {
       throw new ApiError(401, error?.message || "Error in Refreshing Token");
+    }
+  }
+);
+
+// check for slug ----------
+export const checkForSlug = asyncHandler(
+  async (req: Request, res: Response) => {
+    try {
+      const slug = req.params.slug;
+
+      const check = await prisma.user.findFirst({
+        where: {slug}
+      })
+
+      res
+        .status(200)
+        .json(new ApiResponse(200, {available: check ? true : false}, "Checking successfull"));
+    } catch (error: any) {
+      throw new ApiError(401, error?.message || "Error in Checking slug");
+    }
+  }
+);
+
+// update user info ----------
+export const updateUserInfo = asyncHandler(
+  async (req: Request, res: Response) => {
+    try {
+      const userId = req.user?.id;
+
+      const {
+        body: { name, image, slug },
+      }: z.infer<typeof updateUserSchema> = req;
+
+
+      const user = await prisma.user.update({
+        where: {id: userId},
+        data:{
+          name,
+          image,
+          slug
+        }
+      })
+
+      res
+        .status(200)
+        .json(new ApiResponse(200, user, "User updated successfully"));
+    } catch (error: any) {
+      throw new ApiError(401, error?.message || "Error in updating user");
     }
   }
 );

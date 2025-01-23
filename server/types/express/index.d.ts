@@ -11,6 +11,7 @@ declare global {
         name?: string;
         status: int
       }
+      ipAddress?: str
     }
   }
 }

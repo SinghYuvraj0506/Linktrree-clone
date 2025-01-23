@@ -14,3 +14,11 @@ export const loginUserSchema = z.object({
         password: z.string({required_error:"Password is required"}).min(6,'Password is weak, min 6 characters required'),
     })
 })
+
+export const updateUserSchema = z.object({
+    body:z.object({
+        name: z.string().email("Invalid Email").optional(),
+        image: z.string().url("Invalid Image Url").optional(),
+        slug: z.string().optional(),
+    })
+})
