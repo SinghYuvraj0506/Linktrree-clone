@@ -1,7 +1,11 @@
 import { Request, Response } from "express";
 import asyncHandler from "../utils/asyncHandler";
 import { z } from "zod";
-import { loginUserSchema, registerUserSchema,updateUserSchema } from "../schemas/auth.schema";
+import {
+  loginUserSchema,
+  registerUserSchema,
+  updateUserSchema,
+} from "../schemas/auth.schema";
 import prisma from "../config/db.config";
 import {
   comparePassword,
@@ -36,7 +40,6 @@ export const authGoogle = asyncHandler((req: Request, res: Response) => {
   return res.redirect(authorizationUrl);
 });
 
-
 export const googleCallback = asyncHandler(
   async (req: Request, res: Response) => {
     const { code } = req.query;
@@ -66,7 +69,7 @@ export const googleCallback = asyncHandler(
           name: profile?.name,
           image: profile?.picture,
           provider: "GOOGLE",
-          slug: profile?.name?.split(" ").join("_").toLowerCase()
+          slug: profile?.name?.split(" ").join("_").toLowerCase(),
         },
         update: {},
       });
@@ -124,7 +127,7 @@ export const registerUser = asyncHandler(
         email,
         password: newPassword,
         provider: "CREDENTIALS",
-        slug: name?.split(" ").join("_").toLowerCase()
+        slug: name?.split(" ").join("_").toLowerCase(),
       },
     });
 
@@ -139,11 +142,12 @@ export const registerUser = asyncHandler(
       throw new ApiError(400, "Error in Credentials Signup");
     }
 
-    return res
+    res
       .status(200)
       .cookie("accessToken", accessToken, cookieOption)
       .cookie("refreshToken", refreshToken, cookieOption)
-      .redirect(`${process.env.SUCCESS_REDIRECT_URL}`);
+      .json(new ApiResponse(200, { success: true }, "Registered Succesfully"));
+    // .redirect(`${process.env.SUCCESS_REDIRECT_URL}`);
   }
 );
 
@@ -180,11 +184,12 @@ export const loginUser = asyncHandler(async (req: Request, res: Response) => {
     throw new ApiError(400, "Error in Credentials Login");
   }
 
-  return res
+  res
     .status(200)
     .cookie("accessToken", accessToken, cookieOption)
     .cookie("refreshToken", refreshToken, cookieOption)
-    .redirect(`${process.env.SUCCESS_REDIRECT_URL}`);
+    .json(new ApiResponse(200, { success: true }, "Logged in Succesfully"));
+  // .redirect(`${process.env.SUCCESS_REDIRECT_URL}`);
 });
 
 export const getUserData = asyncHandler(async (req: Request, res: Response) => {
@@ -199,6 +204,7 @@ export const getUserData = asyncHandler(async (req: Request, res: Response) => {
       email: true,
       id: true,
       status: true,
+      slug: true,
     },
   });
 
@@ -279,13 +285,29 @@ export const checkForSlug = asyncHandler(
     try {
       const slug = req.params.slug;
 
+      if (slug.length < 4) {
+        throw new ApiError(400, "Minimum 4 characters are required");
+      }
+
       const check = await prisma.user.findFirst({
-        where: {slug}
+        where: { slug, id: { not: req.user?.id } },
+      });
+
+      await new Promise((res,rej)=> {
+        setTimeout(() => {
+          res(true)
+        }, 1000);
       })
 
       res
         .status(200)
-        .json(new ApiResponse(200, {available: check ? true : false}, "Checking successfull"));
+        .json(
+          new ApiResponse(
+            200,
+            { available: Boolean(!check) },
+            "Checking successfull"
+          )
+        );
     } catch (error: any) {
       throw new ApiError(401, error?.message || "Error in Checking slug");
     }
@@ -302,15 +324,14 @@ export const updateUserInfo = asyncHandler(
         body: { name, image, slug },
       }: z.infer<typeof updateUserSchema> = req;
 
-
       const user = await prisma.user.update({
-        where: {id: userId},
-        data:{
+        where: { id: userId },
+        data: {
           name,
           image,
-          slug
-        }
-      })
+          slug,
+        },
+      });
 
       res
         .status(200)

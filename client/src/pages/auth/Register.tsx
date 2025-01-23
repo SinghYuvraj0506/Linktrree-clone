@@ -18,6 +18,7 @@ import { useAppDispatch, useAppSelector } from "@/lib/store";
 import { useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { LoadingButton } from "@/components/global/Button";
+import AuthLayout from "@/layouts/Authlayout";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -130,4 +131,8 @@ const Register = () => {
   );
 };
 
-export default Register;
+const RegisterComponent = () => {
+  return <AuthLayout children={<Register/>}/>
+}
+
+export default RegisterComponent;

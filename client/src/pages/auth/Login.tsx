@@ -18,6 +18,7 @@ import { useAppDispatch, useAppSelector } from "@/lib/store";
 import { useToast } from "@/hooks/use-toast";
 import { authActions } from "@/lib/features/authSlice";
 import { useEffect } from "react";
+import AuthLayout from "../../layouts/Authlayout";
 
 
 const Login = () => {
@@ -26,10 +27,11 @@ const Login = () => {
   const {toast} = useToast()
   const { loading, error } = useAppSelector((state) => state.auth);
 
-    const { loginUser,clearError } = authActions;
+  const { loginUser,clearError } = authActions;
 
   const form = useForm<z.infer<typeof loginFormSchema>>({
     resolver: zodResolver(loginFormSchema),
+    shouldUnregister:false,
     defaultValues: {
       email: "",
       password: "",
@@ -111,4 +113,8 @@ const Login = () => {
   );
 };
 
-export default Login;
+const LoginComponent = () => {
+  return <AuthLayout children={<Login/>}/>
+}
+
+export default LoginComponent;

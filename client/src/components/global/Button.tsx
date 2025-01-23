@@ -14,7 +14,7 @@ export const LoadingButton = ({
   className,
   loading,
   text,
-  onClick,
+  onClick
 }: LoadingProps) => {
   return (
     <Button

@@ -8,6 +8,9 @@ import Register from "./pages/auth/Register";
 import { useAppSelector } from "./lib/store";
 import Dashboard from "./pages/dashboard/Dashboard";
 import NotFoundPage from "./pages/NotFound";
+import UpdateSlugComponent from "./pages/onboarding/UpdateSlug";
+import OnboardingLayout from "./layouts/OnboardingLayout";
+import UpdateSlug from "./pages/onboarding/UpdateSlug";
 
 const router = (isAuthenticated: boolean, loading: boolean) => {
   return createBrowserRouter([
@@ -33,7 +36,7 @@ const router = (isAuthenticated: boolean, loading: boolean) => {
         <ProtectRoutes
           navigateTo="/dashboard"
           allowed={!isAuthenticated}
-          loading={loading}
+          // loading={loading}
         />
       ),
       children: [
@@ -60,7 +63,23 @@ const router = (isAuthenticated: boolean, loading: boolean) => {
         {
           path: "",
           element: <Dashboard />,
-        }
+        },
+      ],
+    },
+    {
+      path: "/onboarding",
+      element: (
+        <ProtectRoutes
+          navigateTo="/"
+          allowed={isAuthenticated}
+          loading={loading}
+        />
+      ),
+      children: [
+        {
+          index:true,
+          element: <OnboardingLayout />,
+        },
       ],
     },
     {

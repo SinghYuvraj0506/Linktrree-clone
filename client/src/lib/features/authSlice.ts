@@ -3,20 +3,22 @@ import {
   createAsyncThunk,
   ActionReducerMapBuilder,
 } from "@reduxjs/toolkit";
-import { loginFormSchema, registerFormSchema } from "../schemas";
+import { loginFormSchema, registerFormSchema, updateFormSchema } from "../schemas";
 import { z } from "zod";
 import { axiosServices } from "../utils";
 import { User } from "../types";
 
 interface authState {
   user: User | null;
-  loading: boolean;
+  loading: boolean;     //auth loading state
+  funcLoading: boolean;
   error: null | string;
 }
 
 const initialState: authState = {
   user: null,
   loading: false,
+  funcLoading: false,
   error: null,
 };
 
@@ -39,6 +41,8 @@ function extraActionsFunction() {
     registerUser: registerUser(),
     loginUser: loginUser(),
     getUser: getUser(),
+    updateUser: updateUser(),
+    checkSlugAvailability: checkSlugAvailability(),
   };
 
   // create api -------------------------------------
@@ -48,7 +52,10 @@ function extraActionsFunction() {
       async (data: z.infer<typeof registerFormSchema>, { rejectWithValue }) => {
         try {
           const response = await axiosServices.post(`/auth/register`, data);
-          return response.data;
+          if(response.data.success){
+            window.open("/","_self")
+          }
+          // return response.data;
         } catch (err: any) {
           return rejectWithValue(
             err?.response?.data?.message || "Something went wrong"
@@ -64,7 +71,10 @@ function extraActionsFunction() {
       async (data: z.infer<typeof loginFormSchema>, { rejectWithValue }) => {
         try {
           const response = await axiosServices.post(`/auth/login`, data);
-          return response.data;
+          if(response.data.success){
+            window.open("/","_self")
+          }
+          // return response.data;
         } catch (err: any) {
           return rejectWithValue(
             err?.response?.data?.message || "Something went wrong"
@@ -86,12 +96,37 @@ function extraActionsFunction() {
       }
     });
   }
+
+  function updateUser() {
+    return createAsyncThunk(`${name}/updateUser`, async (data:Partial<z.infer<typeof updateFormSchema>>,{rejectWithValue}) => {
+      try {
+        const response = await axiosServices.put(`/user`, data);
+        return response.data;
+      } catch (err: any) {
+        return rejectWithValue(
+          err?.response?.data?.message || "Something went wrong"
+        );
+      }
+    });
+  }
+
+  function checkSlugAvailability() {
+    return createAsyncThunk(`${name}/checkSlugAvailability`, async (slug:string) => {
+      try {
+        const response = await axiosServices.get(`/user/checkslug/${slug}`);
+        return response.data;
+      } catch (err: any) {
+        throw new Error(err?.response?.data?.message || "Something went wrong")
+      }
+    });
+  }
 }
 
 function extraReducersFunction(builder: ActionReducerMapBuilder<authState>) {
   registerUserReducer(builder);
   loginUserReducer(builder);
   getUserReducer(builder)
+  updateUserReducer(builder)
 
   function registerUserReducer(builder: ActionReducerMapBuilder<authState>) {
     builder
@@ -141,6 +176,22 @@ function extraReducersFunction(builder: ActionReducerMapBuilder<authState>) {
         state.loading = false;
         state.user = null;
         // state.error = action.payload as string;
+      });
+  }
+
+  function updateUserReducer(builder: ActionReducerMapBuilder<authState>) {
+    builder
+      .addCase(extraActions.updateUser.pending, (state) => {
+        state.funcLoading = true;
+        state.error = null;
+      })
+      .addCase(extraActions.updateUser.fulfilled, (state) => {
+        state.funcLoading = false;
+        state.error = null;
+      })
+      .addCase(extraActions.updateUser.rejected, (state, action) => {
+        state.funcLoading = false;
+        state.error = action.payload as string;
       });
   }
 }

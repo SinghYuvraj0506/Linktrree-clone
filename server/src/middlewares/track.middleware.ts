@@ -14,6 +14,17 @@ export const trackUser = asyncHandler(
 
       if(ip){
         data = geoIp.lookup(ip);
+        // {
+        //   range: '',
+        //   country: 'IN',
+        //   region: 'DL',
+        //   city: 'Delhi',
+        //   ll: [ 28.6542, 77.2373 ],
+        //   metro: 0,
+        //   area: 5,
+        //   eu: '0',
+        //   timezone: 'Asia/Kolkata'
+        // }
       }
 
       await prisma.linkClicks.create({

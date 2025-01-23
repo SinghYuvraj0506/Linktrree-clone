@@ -4,7 +4,7 @@ const cookieALlOptions: () => CookieOptions = () => {
     if (process.env.NODE_ENV === "development"){
       return {
         httpOnly: true,
-        secure: false,
+        secure: true,
         sameSite: "none",
         domain:"localhost"
       };
