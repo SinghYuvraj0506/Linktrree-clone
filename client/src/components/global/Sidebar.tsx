@@ -74,7 +74,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ optionsArray }) => {
                 className="cursor-pointer"
               >
                 <AvatarImage src="https://github.com/shadcn.png" />
-                <AvatarFallback>CN</AvatarFallback>
+                <AvatarFallback>{user?.name.toUpperCase().slice(0,2)}</AvatarFallback>
               </Avatar>
             </DropdownMenuTrigger>
             {user?.slug && <div
@@ -87,7 +87,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ optionsArray }) => {
           </div>
 
           <DropdownMenuContent>
-            <DropdownMenuLabel>My Account</DropdownMenuLabel>
+            <DropdownMenuLabel>{user?.name}</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem>Switch Account</DropdownMenuItem>
             <DropdownMenuItem>Logout</DropdownMenuItem>

@@ -14,6 +14,14 @@ export interface Link {
   type: LINKTYPE;
   active: boolean;
 }
+export interface Profile {
+  id: string
+  name: string;
+  image?: string;
+  email: string;
+  slug: string;
+  links: Link[]
+}
 
 export enum LINKTYPE {
   OTHERS = "OTHERS",

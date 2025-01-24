@@ -11,6 +11,7 @@ import NotFoundPage from "./pages/NotFound";
 import OnboardingLayout from "./layouts/OnboardingLayout";
 import DashboardLayout from "./layouts/DashboardLayout";
 import AuthLayout from "./layouts/Authlayout";
+import ProfilePage from "./pages/public/ProfilePage";
 
 const router = (isAuthenticated: boolean, loading: boolean) => {
   return createBrowserRouter([
@@ -85,6 +86,10 @@ const router = (isAuthenticated: boolean, loading: boolean) => {
           element: <OnboardingLayout />,
         },
       ],
+    },
+    {
+      path: "/:slug",
+      element: <ProfilePage/>
     },
     {
       path: "*",

@@ -15,6 +15,7 @@ export const getProfileData = asyncHandler(
         select: {
           name: true,
           image: true,
+          slug:true,
           links: {
             select: {
               url: true,

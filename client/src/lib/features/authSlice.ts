@@ -42,6 +42,7 @@ function extraActionsFunction() {
     loginUser: loginUser(),
     getUser: getUser(),
     updateUser: updateUser(),
+    logoutUser: logoutUser(),
     checkSlugAvailability: checkSlugAvailability(),
   };
 
@@ -89,6 +90,18 @@ function extraActionsFunction() {
       try {
         const response = await axiosServices.get(`/auth/me`);
         return response.data;
+      } catch (err: any) {
+        return rejectWithValue(
+          err?.response?.data?.message || "Something went wrong"
+        );
+      }
+    });
+  }
+
+  function logoutUser() {
+    return createAsyncThunk(`${name}/logoutUser`, async (data:null,{rejectWithValue}) => {
+      try {
+        const response = await axiosServices.get(`/auth/logout`);
       } catch (err: any) {
         return rejectWithValue(
           err?.response?.data?.message || "Something went wrong"

@@ -2,11 +2,13 @@ import { configureStore } from '@reduxjs/toolkit'
 import { useDispatch, useSelector } from 'react-redux'
 import authReducer, {authActions} from "./features/authSlice"
 import linkReducer from "./features/linksSlice"
+import publicReducer from "./features/publicSlice"
 
 export const store = configureStore({
   reducer: {
     auth:authReducer,
-    links: linkReducer
+    links: linkReducer,
+    public: publicReducer
   },
 })
 
