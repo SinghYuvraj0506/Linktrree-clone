@@ -293,12 +293,6 @@ export const checkForSlug = asyncHandler(
         where: { slug, id: { not: req.user?.id } },
       });
 
-      await new Promise((res,rej)=> {
-        setTimeout(() => {
-          res(true)
-        }, 1000);
-      })
-
       res
         .status(200)
         .json(
