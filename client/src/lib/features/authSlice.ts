@@ -54,7 +54,7 @@ function extraActionsFunction() {
         try {
           const response = await axiosServices.post(`/auth/register`, data);
           if(response.data.success){
-            window.open("/","_self")
+            window.open("/onboarding","_self")
           }
           // return response.data;
         } catch (err: any) {

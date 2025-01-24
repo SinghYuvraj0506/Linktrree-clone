@@ -1,21 +1,30 @@
 import MobilePreview from "@/components/global/MobilePreview";
 import { Button } from "@/components/ui/button";
-import { useAppDispatch } from "@/lib/store";
+import { useAppDispatch, useAppSelector } from "@/lib/store";
 import { Copy } from "lucide-react";
 import { useEffect } from "react";
 import LinksMain from "./_components/LinksMain";
 import { linkActions } from "@/lib/features/linksSlice";
+import { useToast } from "@/hooks/use-toast";
 
 const Dashboard = () => {
+  const {user} = useAppSelector(state=>state.auth)
+  const {toast} = useToast()
+
   const copyToClipboard = async () => {
-    const linktreeURL = "https://your-linktree.com/username";
     try {
-      await navigator.clipboard.writeText(linktreeURL);
-      alert("Profile link copied to clipboard!");
+      const profileLink = `https://${window.location.hostname}/${user?.slug}`;
+      await navigator.clipboard.writeText(profileLink);
+      toast({
+        title: "Info",
+        description: "Link Copied Successfully",
+        variant: "default",
+      });
     } catch (err) {
       console.error("Failed to copy profile link:", err);
     }
   };
+
   const dispatch = useAppDispatch()
   const {getAllUserLinks} = linkActions
 
@@ -33,10 +42,10 @@ const Dashboard = () => {
           <p className="text-sm font-medium text-muted-foreground">
             Your Linktree is live:{" "}
             <a
-              href="https://your-linktree.com/username"
+              href={`https://${window.location.hostname}/${user?.slug}`}
               className="text-primary underline"
             >
-              your-linktree.com/username
+              {`${window.location.hostname}/${user?.slug}`}
             </a>
           </p>
           <Button variant="outline" size="sm" onClick={copyToClipboard}>

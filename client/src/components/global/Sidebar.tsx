@@ -30,7 +30,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ optionsArray }) => {
   const copyToClipboard = async (e:any) => {
     e?.stopPropagation();
     try {
-      const profileLink = `http://localhost:5173/${user?.slug}`;
+      const profileLink = `https://${window.location.hostname}/${user?.slug}`;
       await navigator.clipboard.writeText(profileLink);
       toast({
         title: "Info",
