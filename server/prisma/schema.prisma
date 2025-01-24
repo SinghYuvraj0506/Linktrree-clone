@@ -57,7 +57,7 @@ model LinkClicks {
   region  String?
   timezone  String?
   city  String?
-  ll  String[]
+  ll  Float[]
 
   slug  String?
 
