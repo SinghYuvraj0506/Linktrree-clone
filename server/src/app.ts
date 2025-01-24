@@ -29,9 +29,9 @@ app.get("/healthcheck", (req, res) => {
 app.use("/api/v1", router());
 
 // 404 route handler
-// app.all("*", (req: Request, res: Response) => {
-//   throw new ApiError(404, `Route ${req.originalUrl} Not Found!!!`);
-// });
+app.all("*", (req: Request, res: Response) => {
+  throw new ApiError(404, `Route ${req.originalUrl} Not Found!!!`);
+});
 
 // handle Error Responses ---
 app.use(ErrorMiddleware as any)
