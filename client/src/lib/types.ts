@@ -15,6 +15,7 @@ export interface Link {
   type: LINKTYPE;
   active: boolean;
 }
+
 export interface Profile {
   id: string
   name: string;
@@ -23,6 +24,30 @@ export interface Profile {
   slug: string;
   links: Link[]
 }
+export interface Profile {
+  id: string
+  name: string;
+  image?: string;
+  email: string;
+  slug: string;
+  links: Link[]
+}
+export interface AnalyticsData {
+  slugStats: {
+    city: string | null;
+    country: string | null;
+    ip: string;
+    ll: number[];
+    region: string | null;
+    timezone: string | null;
+  }[];
+  linksStats: {
+    _count: {
+      id: number;
+    };
+    linkId: string;
+  }[];
+};
 
 export enum LINKTYPE {
   OTHERS = "OTHERS",

@@ -10,11 +10,12 @@ import {
 } from "../schemas";
 import { z } from "zod";
 import { axiosServices } from "../utils";
-import { User } from "../types";
+import { AnalyticsData, User } from "../types";
 import { updateAppearance } from "../store";
 
 interface authState {
   user: User | null;
+  analyticsData: AnalyticsData | null;
   loading: boolean; //auth loading state
   funcLoading: boolean;
   error: null | string;
@@ -22,6 +23,7 @@ interface authState {
 
 const initialState: authState = {
   user: null,
+  analyticsData: null,
   loading: false,
   funcLoading: false,
   error: null,
@@ -180,6 +182,7 @@ function extraReducersFunction(builder: ActionReducerMapBuilder<authState>) {
   registerUserReducer(builder);
   loginUserReducer(builder);
   getUserReducer(builder);
+  getAnalyticsReducer(builder);
   updateUserReducer(builder);
 
   function registerUserReducer(builder: ActionReducerMapBuilder<authState>) {
@@ -244,6 +247,23 @@ function extraReducersFunction(builder: ActionReducerMapBuilder<authState>) {
         state.error = null;
       })
       .addCase(extraActions.updateUser.rejected, (state, action) => {
+        state.funcLoading = false;
+        state.error = action.payload as string;
+      });
+  }
+
+  function getAnalyticsReducer(builder: ActionReducerMapBuilder<authState>) {
+    builder
+      .addCase(extraActions.getAnalytics.pending, (state) => {
+        state.funcLoading = true;
+        state.error = null;
+      })
+      .addCase(extraActions.getAnalytics.fulfilled, (state, action) => {
+        state.funcLoading = false;
+        state.analyticsData = action.payload.data
+        state.error = null;
+      })
+      .addCase(extraActions.getAnalytics.rejected, (state, action) => {
         state.funcLoading = false;
         state.error = action.payload as string;
       });
