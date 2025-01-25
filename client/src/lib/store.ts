@@ -27,9 +27,9 @@ export const updateAppearance = (data:any) => {
   store.dispatch(appearanceActions.updateData(data))
 }
 
-const init = () => {
+export const fetchInitalData = () => {
   store.dispatch(authActions.getUser(null))
   store.dispatch(linkActions.getAllUserLinks(null))
 }
 
-init();
+fetchInitalData();

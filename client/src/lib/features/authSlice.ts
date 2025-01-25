@@ -11,7 +11,7 @@ import {
 import { z } from "zod";
 import { axiosServices } from "../utils";
 import { AnalyticsData, User } from "../types";
-import { updateAppearance } from "../store";
+import { fetchInitalData, updateAppearance } from "../store";
 
 interface authState {
   user: User | null;
@@ -135,6 +135,7 @@ function extraActionsFunction() {
       ) => {
         try {
           const response = await axiosServices.put(`/user`, data);
+          fetchInitalData()
           return response.data;
         } catch (err: any) {
           return rejectWithValue(
