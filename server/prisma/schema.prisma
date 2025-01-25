@@ -22,6 +22,7 @@ model User {
   updated_at   DateTime         @default(now()) @updatedAt
 
   slug String @unique
+  templateData Json?
 
   links Link[]
   analytics LinkClicks[]
@@ -58,8 +59,6 @@ model LinkClicks {
   timezone  String?
   city  String?
   ll  Float[]
-
-  slug  String?
 
   created_at DateTime @default(now())
   updated_at DateTime @default(now()) @updatedAt

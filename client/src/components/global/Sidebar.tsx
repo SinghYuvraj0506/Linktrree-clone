@@ -10,8 +10,9 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useAppSelector } from "@/lib/store";
+import { useAppDispatch, useAppSelector } from "@/lib/store";
 import { useToast } from "@/hooks/use-toast";
+import { authActions } from "@/lib/features/authSlice";
 
 export type sidebarOptionType = {
   title: string;
@@ -25,7 +26,9 @@ interface SidebarProps {
 
 export const Sidebar: React.FC<SidebarProps> = ({ optionsArray }) => {
   const {user} = useAppSelector(state => state.auth)
+  const {logoutUser} = authActions
   const { toast } = useToast();
+  const dispatch = useAppDispatch()
   
   const copyToClipboard = async (e:any) => {
     e?.stopPropagation();
@@ -41,6 +44,11 @@ export const Sidebar: React.FC<SidebarProps> = ({ optionsArray }) => {
       console.error("Failed to copy profile link:", err);
     }
   };
+
+  const handleLogout = () => {
+    dispatch(logoutUser(null))
+  }
+
   return (
     <div className="hidden border-r bg-muted/40 md:block h-screen overflow-hidden sticky left-0 top-0">
       <div className="flex h-full max-h-screen flex-col gap-2">
@@ -90,7 +98,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ optionsArray }) => {
             <DropdownMenuLabel>{user?.name}</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem>Switch Account</DropdownMenuItem>
-            <DropdownMenuItem>Logout</DropdownMenuItem>
+            <DropdownMenuItem onClick={handleLogout}>Logout</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>

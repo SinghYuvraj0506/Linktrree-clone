@@ -20,5 +20,6 @@ export const updateUserSchema = z.object({
         name: z.string().email("Invalid Email").optional(),
         image: z.string().url("Invalid Image Url").optional(),
         slug: z.string().optional(),
+        templateData: z.object({}).optional()
     })
 })

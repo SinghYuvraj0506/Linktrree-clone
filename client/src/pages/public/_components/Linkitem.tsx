@@ -1,16 +1,19 @@
 
 import { Link } from "@/lib/types";
+import React from "react";
 
 type Props = {
   link: Link;
   handleLinkClick:(link:Link) => void
+  style : React.CSSProperties
 };
 
-const LinkItem = ({ link , handleLinkClick }: Props) => {
+const LinkItem = ({ link , handleLinkClick, style }: Props) => {
   return (
     <div
-      className="bg-blue-400 text-white py-3 px-6 rounded-lg shadow hover:bg-blue-500 text-center"
+      className="py-3 px-6 text-center cursor-pointer"
       onClick={()=>handleLinkClick(link)}
+      style={style}
     >
       {link.title}
     </div>

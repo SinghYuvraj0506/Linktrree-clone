@@ -1,6 +1,7 @@
+import MobilePreview from "@/components/global/MobilePreview";
 import { Sidebar, sidebarOptionType } from "@/components/global/Sidebar";
 import { ChartBar, Link, Palette } from "lucide-react";
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 
 const SidebarOptions: sidebarOptionType[] = [
   {
@@ -20,17 +21,26 @@ const SidebarOptions: sidebarOptionType[] = [
   },
 ];
 
-
 const DashboardLayout = () => {
+  const location = useLocation();
+
   return (
-    <div className="flex items-start">
+    <div className="flex h-screen w-screen overflow-hidden">
       <Sidebar optionsArray={SidebarOptions} />
-      <div className="flex-1 overflow-x-hidden min-h-screen">
-        <Outlet />
+      <div className="flex-1 flex items-start">
+        <div className="flex-1 h-screen overflow-y-auto p-4">
+          <Outlet />
+        </div>
+        {["/dashboard", "/dashboard/appearance"].includes(
+          location.pathname
+        ) && (
+          <div className="w-1/3 p-10 box-border">
+            <MobilePreview />
+          </div>
+        )}
       </div>
     </div>
   );
 };
-
 
 export default DashboardLayout;

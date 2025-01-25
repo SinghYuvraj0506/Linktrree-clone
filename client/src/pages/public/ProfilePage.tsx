@@ -8,6 +8,8 @@ import NotFoundPage from "../NotFound";
 import LinkItem from "./_components/Linkitem";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Link } from "@/lib/types";
+import { backgroundStyleGenerator, buttonStyleGenerator } from "@/lib/utils";
+import clsx from "clsx";
 
 // const SocialLinks = ({ links }) => (
 //   <div className="flex space-x-4 mt-2">
@@ -26,6 +28,7 @@ import { Link } from "@/lib/types";
 const LinktreeProfile = () => {
   const { slug } = useParams();
   const { loading, error, data } = useAppSelector((state) => state.public);
+  const { data: appearanceData } = useAppSelector((state) => state.appearance);
   const socialLinks = [
     { url: "https://facebook.com", icon: FacebookIcon },
     { url: "https://youtube.com", icon: YoutubeIcon },
@@ -35,9 +38,9 @@ const LinktreeProfile = () => {
   const { getProfileData, redirectToURL } = publicActions;
   const dispatch = useAppDispatch();
 
-  const handleLinkClick = (link:Link) => {
+  const handleLinkClick = (link: Link) => {
     dispatch(redirectToURL(link));
-  }
+  };
 
   useEffect(() => {
     if (slug) {
@@ -54,10 +57,17 @@ const LinktreeProfile = () => {
   }
 
   return (
-    <div className="flex flex-col items-center bg-gray-100 min-h-screen p-4">
+    <div
+      className={clsx("flex flex-col items-center min-h-screen p-4")}
+      style={backgroundStyleGenerator({
+        type: appearanceData?.background,
+        color: appearanceData?.backgroundColor,
+        image: appearanceData?.image,
+      })}
+    >
       {/* Profile Section */}
       <div className="flex flex-col items-center">
-        <Avatar className="cursor-pointer w-24 h-24" >
+        <Avatar className="cursor-pointer w-24 h-24">
           <AvatarImage src={data?.image ?? "https://github.com/shadcn.png"} />
           <AvatarFallback>
             {data?.name.toUpperCase().slice(0, 2)}
@@ -75,7 +85,17 @@ const LinktreeProfile = () => {
       <div className="mt-6 w-full max-w-md h-[60vh] overflow-y-auto px-2">
         <div className="flex flex-col space-y-4">
           {data?.links?.map((link, index) => (
-            <LinkItem key={index} link={link} handleLinkClick={handleLinkClick}/>
+            <LinkItem
+              key={index}
+              link={link}
+              handleLinkClick={handleLinkClick}
+              style={buttonStyleGenerator({
+                type: appearanceData?.buttonType,
+                rounded_type: appearanceData?.buttonRoundedType,
+                colorButton: appearanceData?.buttonColor,
+                colorFont: appearanceData?.buttonfontColor,
+              })}
+            />
           ))}
         </div>
       </div>

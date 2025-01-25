@@ -5,6 +5,7 @@ import {
 } from "@reduxjs/toolkit";
 import { axiosServices } from "../utils";
 import { Link, Profile } from "../types";
+import { updateAppearance } from "../store";
 
 interface publicState {
   data: Profile | null;
@@ -44,6 +45,7 @@ function extraActionsFunction() {
     return createAsyncThunk(`${name}/getProfileData`, async (slug:string,{rejectWithValue}) => {
       try {
         const response = await axiosServices.get(`/public/getProfile/${slug}`);
+         updateAppearance(response.data?.data?.templateData)
         return response.data;
       } catch (err: any) {
         return rejectWithValue(

@@ -3,14 +3,19 @@ import {
   createAsyncThunk,
   ActionReducerMapBuilder,
 } from "@reduxjs/toolkit";
-import { loginFormSchema, registerFormSchema, updateFormSchema } from "../schemas";
+import {
+  loginFormSchema,
+  registerFormSchema,
+  updateFormSchema,
+} from "../schemas";
 import { z } from "zod";
 import { axiosServices } from "../utils";
 import { User } from "../types";
+import { updateAppearance } from "../store";
 
 interface authState {
   user: User | null;
-  loading: boolean;     //auth loading state
+  loading: boolean; //auth loading state
   funcLoading: boolean;
   error: null | string;
 }
@@ -44,6 +49,7 @@ function extraActionsFunction() {
     updateUser: updateUser(),
     logoutUser: logoutUser(),
     checkSlugAvailability: checkSlugAvailability(),
+    getAnalytics: getAnalytics(),
   };
 
   // create api -------------------------------------
@@ -53,8 +59,8 @@ function extraActionsFunction() {
       async (data: z.infer<typeof registerFormSchema>, { rejectWithValue }) => {
         try {
           const response = await axiosServices.post(`/auth/register`, data);
-          if(response.data.success){
-            window.open("/onboarding","_self")
+          if (response.data.success) {
+            window.open("/onboarding", "_self");
           }
           // return response.data;
         } catch (err: any) {
@@ -72,8 +78,8 @@ function extraActionsFunction() {
       async (data: z.infer<typeof loginFormSchema>, { rejectWithValue }) => {
         try {
           const response = await axiosServices.post(`/auth/login`, data);
-          if(response.data.success){
-            window.open("/","_self")
+          if (response.data.success) {
+            window.open("/", "_self");
           }
           // return response.data;
         } catch (err: any) {
@@ -86,60 +92,95 @@ function extraActionsFunction() {
   }
 
   function getUser() {
-    return createAsyncThunk(`${name}/getUser`, async (data:null,{rejectWithValue}) => {
-      try {
-        const response = await axiosServices.get(`/auth/me`);
-        return response.data;
-      } catch (err: any) {
-        return rejectWithValue(
-          err?.response?.data?.message || "Something went wrong"
-        );
+    return createAsyncThunk(
+      `${name}/getUser`,
+      async (data: null, { rejectWithValue }) => {
+        try {
+          const response = await axiosServices.get(`/auth/me`);
+          updateAppearance(response.data?.data?.templateData)
+          return response.data;
+        } catch (err: any) {
+          return rejectWithValue(
+            err?.response?.data?.message || "Something went wrong"
+          );
+        }
       }
-    });
+    );
   }
 
   function logoutUser() {
-    return createAsyncThunk(`${name}/logoutUser`, async (data:null,{rejectWithValue}) => {
-      try {
-        const response = await axiosServices.get(`/auth/logout`);
-      } catch (err: any) {
-        return rejectWithValue(
-          err?.response?.data?.message || "Something went wrong"
-        );
+    return createAsyncThunk(
+      `${name}/logoutUser`,
+      async (data: null, { rejectWithValue }) => {
+        try {
+          const response = await axiosServices.get(`/auth/logout`);
+          window.open("/", "_self");
+        } catch (err: any) {
+          return rejectWithValue(
+            err?.response?.data?.message || "Something went wrong"
+          );
+        }
       }
-    });
+    );
   }
 
   function updateUser() {
-    return createAsyncThunk(`${name}/updateUser`, async (data:Partial<z.infer<typeof updateFormSchema>>,{rejectWithValue}) => {
-      try {
-        const response = await axiosServices.put(`/user`, data);
-        return response.data;
-      } catch (err: any) {
-        return rejectWithValue(
-          err?.response?.data?.message || "Something went wrong"
-        );
+    return createAsyncThunk(
+      `${name}/updateUser`,
+      async (
+        data: Partial<z.infer<typeof updateFormSchema>>,
+        { rejectWithValue }
+      ) => {
+        try {
+          const response = await axiosServices.put(`/user`, data);
+          return response.data;
+        } catch (err: any) {
+          return rejectWithValue(
+            err?.response?.data?.message || "Something went wrong"
+          );
+        }
       }
-    });
+    );
   }
 
   function checkSlugAvailability() {
-    return createAsyncThunk(`${name}/checkSlugAvailability`, async (slug:string) => {
-      try {
-        const response = await axiosServices.get(`/user/checkslug/${slug}`);
-        return response.data;
-      } catch (err: any) {
-        throw new Error(err?.response?.data?.message || "Something went wrong")
+    return createAsyncThunk(
+      `${name}/checkSlugAvailability`,
+      async (slug: string) => {
+        try {
+          const response = await axiosServices.get(`/user/checkslug/${slug}`);
+          return response.data;
+        } catch (err: any) {
+          throw new Error(
+            err?.response?.data?.message || "Something went wrong"
+          );
+        }
       }
-    });
+    );
+  }
+
+  function getAnalytics() {
+    return createAsyncThunk(
+      `${name}/getAnalytics`,
+      async () => {
+        try {
+          const response = await axiosServices.get(`/analytics`);
+          return response.data;
+        } catch (err: any) {
+          throw new Error(
+            err?.response?.data?.message || "Something went wrong"
+          );
+        }
+      }
+    );
   }
 }
 
 function extraReducersFunction(builder: ActionReducerMapBuilder<authState>) {
   registerUserReducer(builder);
   loginUserReducer(builder);
-  getUserReducer(builder)
-  updateUserReducer(builder)
+  getUserReducer(builder);
+  updateUserReducer(builder);
 
   function registerUserReducer(builder: ActionReducerMapBuilder<authState>) {
     builder
@@ -180,9 +221,9 @@ function extraReducersFunction(builder: ActionReducerMapBuilder<authState>) {
         state.user = null;
         state.error = null;
       })
-      .addCase(extraActions.getUser.fulfilled, (state,action) => {
+      .addCase(extraActions.getUser.fulfilled, (state, action) => {
         state.loading = false;
-        state.user = action.payload.data
+        state.user = action.payload.data;
         state.error = null;
       })
       .addCase(extraActions.getUser.rejected, (state) => {

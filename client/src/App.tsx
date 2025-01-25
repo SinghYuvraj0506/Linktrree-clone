@@ -6,12 +6,14 @@ import Landing from "./pages/Landing";
 import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
 import { useAppSelector } from "./lib/store";
-import Dashboard from "./pages/dashboard/Dashboard";
+import Dashboard from "./pages/dashboard/Links/Dashboard";
 import NotFoundPage from "./pages/NotFound";
 import OnboardingLayout from "./layouts/OnboardingLayout";
 import DashboardLayout from "./layouts/DashboardLayout";
 import AuthLayout from "./layouts/Authlayout";
 import ProfilePage from "./pages/public/ProfilePage";
+import Analytics from "./pages/dashboard/Analytics";
+import Appearance from "./pages/dashboard/Appearance/Appearance";
 
 const router = (isAuthenticated: boolean, loading: boolean) => {
   return createBrowserRouter([
@@ -68,6 +70,14 @@ const router = (isAuthenticated: boolean, loading: boolean) => {
         {
           path: "",
           element: <Dashboard />,
+        },
+        {
+          path: "analytics",
+          element: <Analytics />,
+        },
+        {
+          path: "appearance",
+          element: <Appearance />,
         },
       ],
     },

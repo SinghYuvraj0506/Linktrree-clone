@@ -27,7 +27,11 @@ exports.getProfileData = (0, asyncHandler_1.default)((req, res) => __awaiter(voi
                 name: true,
                 image: true,
                 slug: true,
+                templateData: true,
                 links: {
+                    where: {
+                        active: true
+                    },
                     select: {
                         url: true,
                         title: true,

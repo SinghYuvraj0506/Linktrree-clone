@@ -202,9 +202,11 @@ export const getUserData = asyncHandler(async (req: Request, res: Response) => {
     select: {
       name: true,
       email: true,
+      image:true,
       id: true,
       status: true,
       slug: true,
+      templateData:true
     },
   });
 
@@ -223,11 +225,11 @@ export const logoutUser = asyncHandler(async (req: Request, res: Response) => {
       refreshToken: null,
     },
   });
-  return res
+  res
     .status(200)
     .clearCookie("accessToken", cookieOption)
     .clearCookie("refreshToken", cookieOption)
-    .redirect(process.env.CLIENT_URL as string);
+    .json(new ApiResponse(200, null, "Logged Out successfully"));
 });
 
 // refresh user token --------------------------
@@ -315,7 +317,7 @@ export const updateUserInfo = asyncHandler(
       const userId = req.user?.id;
 
       const {
-        body: { name, image, slug },
+        body: { name, image, slug, templateData },
       }: z.infer<typeof updateUserSchema> = req;
 
       const user = await prisma.user.update({
@@ -324,6 +326,7 @@ export const updateUserInfo = asyncHandler(
           name,
           image,
           slug,
+          templateData
         },
       });
 

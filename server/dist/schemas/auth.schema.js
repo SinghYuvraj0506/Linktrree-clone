@@ -20,5 +20,6 @@ exports.updateUserSchema = zod_1.z.object({
         name: zod_1.z.string().email("Invalid Email").optional(),
         image: zod_1.z.string().url("Invalid Image Url").optional(),
         slug: zod_1.z.string().optional(),
+        templateData: zod_1.z.object({}).optional()
     })
 });

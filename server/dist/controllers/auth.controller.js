@@ -160,9 +160,11 @@ exports.getUserData = (0, asyncHandler_1.default)((req, res) => __awaiter(void 0
         select: {
             name: true,
             email: true,
+            image: true,
             id: true,
             status: true,
             slug: true,
+            templateData: true
         },
     });
     if (!user || (user === null || user === void 0 ? void 0 : user.status) !== 1) {
@@ -179,11 +181,11 @@ exports.logoutUser = (0, asyncHandler_1.default)((req, res) => __awaiter(void 0,
             refreshToken: null,
         },
     });
-    return res
+    res
         .status(200)
         .clearCookie("accessToken", constants_1.cookieOption)
         .clearCookie("refreshToken", constants_1.cookieOption)
-        .redirect(process.env.CLIENT_URL);
+        .json(new ApiResponse_1.default(200, null, "Logged Out successfully"));
 }));
 // refresh user token --------------------------
 exports.refreshAccessToken = (0, asyncHandler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -243,13 +245,14 @@ exports.updateUserInfo = (0, asyncHandler_1.default)((req, res) => __awaiter(voi
     var _a;
     try {
         const userId = (_a = req.user) === null || _a === void 0 ? void 0 : _a.id;
-        const { body: { name, image, slug }, } = req;
+        const { body: { name, image, slug, templateData }, } = req;
         const user = yield db_config_1.default.user.update({
             where: { id: userId },
             data: {
                 name,
                 image,
                 slug,
+                templateData
             },
         });
         res

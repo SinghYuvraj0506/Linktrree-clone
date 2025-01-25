@@ -6,7 +6,7 @@ import prisma from "../config/db.config.js";
 export const trackUser = asyncHandler(
   async (req: Request, _, next: NextFunction) => {
     try {
-      const slug = req.params?.slug;
+      const slug = req.params.slug
       const id = req.query?.id;
 
       const ip = req.ipAddress;
@@ -27,18 +27,36 @@ export const trackUser = asyncHandler(
         // }
       }
 
-      await prisma.linkClicks.create({
-        data:{
-          ip: ip,
-          slug: slug,
-          linkId: id as string,
-          city: data?.city,
-          country: data?.country,
-          region: data?.region,
-          ll: data?.ll,
-          timezone: data?.timezone
-        }
-      })
+      if(slug){
+        await prisma.linkClicks.create({
+          data:{
+            ip: ip,
+            city: data?.city,
+            country: data?.country,
+            region: data?.region,
+            ll: data?.ll,
+            timezone: data?.timezone,
+            user:{
+              connect:{
+                slug: slug
+              }
+            },
+          }
+        })
+      }
+      else{
+        await prisma.linkClicks.create({
+          data:{
+            ip: ip,
+            city: data?.city,
+            linkId: id as string,
+            country: data?.country,
+            region: data?.region,
+            ll: data?.ll,
+            timezone: data?.timezone,
+          }
+        })
+      }
 
       next();
     } catch (error: any) {
@@ -47,3 +65,4 @@ export const trackUser = asyncHandler(
     }
   }
 );
+
