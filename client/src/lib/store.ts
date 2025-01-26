@@ -22,11 +22,6 @@ export type AppDispatch = typeof store.dispatch
 export const useAppDispatch = useDispatch.withTypes<AppDispatch>()
 export const useAppSelector = useSelector.withTypes<RootState>()
 
-
-export const updateAppearance = (data:any) => {
-  store.dispatch(appearanceActions.updateData(data))
-}
-
 export const fetchInitalData = () => {
   store.dispatch(authActions.getUser(null))
   store.dispatch(linkActions.getAllUserLinks(null))

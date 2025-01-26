@@ -6,6 +6,7 @@ import {
 import { axiosServices } from "../utils";
 import { Link, Profile } from "../types";
 import { updateAppearance } from "../store";
+import { appearanceActions } from "./appearanceSlice";
 
 interface publicState {
   data: Profile | null;
@@ -42,10 +43,10 @@ function extraActionsFunction() {
 
   // create api -------------------------------------
   function getProfileData() {
-    return createAsyncThunk(`${name}/getProfileData`, async (slug:string,{rejectWithValue}) => {
+    return createAsyncThunk(`${name}/getProfileData`, async (slug:string,{rejectWithValue, dispatch}) => {
       try {
         const response = await axiosServices.get(`/public/getProfile/${slug}`);
-         updateAppearance(response.data?.data?.templateData)
+        dispatch(appearanceActions.updateData(response.data?.data?.templateData ?? {}))
         return response.data;
       } catch (err: any) {
         return rejectWithValue(

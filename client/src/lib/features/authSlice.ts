@@ -11,7 +11,8 @@ import {
 import { z } from "zod";
 import { axiosServices } from "../utils";
 import { AnalyticsData, User } from "../types";
-import { fetchInitalData, updateAppearance } from "../store";
+import { fetchInitalData} from "../store";
+import { appearanceActions } from "./appearanceSlice";
 
 interface authState {
   user: User | null;
@@ -96,10 +97,10 @@ function extraActionsFunction() {
   function getUser() {
     return createAsyncThunk(
       `${name}/getUser`,
-      async (data: null, { rejectWithValue }) => {
+      async (data: null, { rejectWithValue, dispatch }) => {
         try {
           const response = await axiosServices.get(`/auth/me`);
-          updateAppearance(response.data?.data?.templateData)
+          dispatch(appearanceActions.updateData(response.data?.data?.templateData ?? {}))
           return response.data;
         } catch (err: any) {
           return rejectWithValue(
@@ -227,13 +228,14 @@ function extraReducersFunction(builder: ActionReducerMapBuilder<authState>) {
       })
       .addCase(extraActions.getUser.fulfilled, (state, action) => {
         state.loading = false;
+        console.log("setting user ", action.payload.data)
         state.user = action.payload.data;
         state.error = null;
       })
-      .addCase(extraActions.getUser.rejected, (state) => {
+      .addCase(extraActions.getUser.rejected, (state,action) => {
         state.loading = false;
-        state.user = null;
-        // state.error = action.payload as string;
+        // state.user = null;
+        state.error = action.payload as string;
       });
   }
 
