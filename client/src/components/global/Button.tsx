@@ -7,6 +7,7 @@ export type LoadingProps = {
   className?: string;
   loading?: boolean;
   onClick?: () => void;
+  disabled?: boolean
 };
 
 export const LoadingButton = ({
@@ -14,7 +15,8 @@ export const LoadingButton = ({
   className,
   loading,
   text,
-  onClick
+  onClick,
+  disabled = false
 }: LoadingProps) => {
   return (
     <Button
@@ -22,7 +24,7 @@ export const LoadingButton = ({
       className={clsx(className, {
         "cursor-not-allowed opacity-70": loading,
       })}
-      disabled={loading}
+      disabled={disabled || loading}
       onClick={onClick}
     >
       {loading ? (

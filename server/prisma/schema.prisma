@@ -24,6 +24,9 @@ model User {
   slug String @unique
   templateData Json?
 
+  redirect_link_id  String? @unique  // DIRECTLY REDIRECT TO THIS LINK
+  redirect_link  Link?  @relation("RedirectLinkRelation", fields: [redirect_link_id], references: [id])
+
   links Link[]
   analytics LinkClicks[]
 
@@ -39,11 +42,27 @@ model Link {
   type LINKS_TYPE
   active  Boolean  @default(true)
 
+  thumbnail   String?
+  thumbnail_layout  THUMBNAIL_LAYOUT_TYPE @default(COMPACT)
+
+  prioritize  Boolean  @default(false)
+  animation_type LINK_ANIMATION_TYPE @default(NONE)
+
+  show_time  DateTime?
+  hide_time  DateTime?
+
+  isLocked  Boolean @default(false)
+  lock_type LINK_LOCK_TYPE @default(NONE)
+  lock_data Json?
+
   created_at DateTime @default(now())
   updated_at DateTime @default(now()) @updatedAt
 
   userId String
   user   User   @relation(fields: [userId], references: [id])
+
+  redirect_relation_user_id String?
+  redirect_relation_user User? @relation("RedirectLinkRelation")
 
   analytics LinkClicks[]
 
@@ -80,4 +99,25 @@ enum ACCOUNT_PROVIDER {
 enum LINKS_TYPE {
   SOCIAL
   OTHERS
+}
+
+enum THUMBNAIL_LAYOUT_TYPE {
+  COMPACT
+  LARGE
+}
+
+enum LINK_ANIMATION_TYPE {
+  NONE
+  BUZZ
+  WOBBLE
+  POP
+  SWIPE
+}
+
+enum LINK_LOCK_TYPE {
+  NONE
+  SUBSCRIBE
+  CODE
+  SENSITIVE
+  DOB
 }

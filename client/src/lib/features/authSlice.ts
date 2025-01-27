@@ -2,6 +2,7 @@ import {
   createSlice,
   createAsyncThunk,
   ActionReducerMapBuilder,
+  PayloadAction,
 } from "@reduxjs/toolkit";
 import {
   loginFormSchema,
@@ -39,6 +40,12 @@ export const authSlice = createSlice({
   reducers: {
     clearError: (state) => {
       state.error = null;
+    },
+    updateReduirectUrl: (state, action:PayloadAction<string | null>) => {
+      state.user = {
+        ...state.user as any,
+        redirect_link_id: action.payload
+      };
     },
   },
   extraReducers: (builder) => extraReducersFunction(builder),

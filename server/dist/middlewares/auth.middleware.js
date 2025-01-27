@@ -16,6 +16,7 @@ exports.ensureGuest = exports.verifyJWT = void 0;
 const asyncHandler_js_1 = __importDefault(require("../utils/asyncHandler.js"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const ApiError_js_1 = __importDefault(require("../utils/ApiError.js"));
+const logger_js_1 = __importDefault(require("../utils/logger.js"));
 exports.verifyJWT = (0, asyncHandler_js_1.default)((req, _, next) => __awaiter(void 0, void 0, void 0, function* () {
     var _a, _b;
     try {
@@ -32,7 +33,8 @@ exports.verifyJWT = (0, asyncHandler_js_1.default)((req, _, next) => __awaiter(v
         next();
     }
     catch (error) {
-        throw new ApiError_js_1.default(401, (error === null || error === void 0 ? void 0 : error.message) || "Unauthorized Access!!!");
+        logger_js_1.default.error(error === null || error === void 0 ? void 0 : error.message);
+        throw new ApiError_js_1.default(401, "Unauthorized Access!!!");
     }
 }));
 exports.ensureGuest = (0, asyncHandler_js_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {

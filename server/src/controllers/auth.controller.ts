@@ -206,7 +206,8 @@ export const getUserData = asyncHandler(async (req: Request, res: Response) => {
       id: true,
       status: true,
       slug: true,
-      templateData:true
+      templateData:true,
+      redirect_link_id:true
     },
   });
 

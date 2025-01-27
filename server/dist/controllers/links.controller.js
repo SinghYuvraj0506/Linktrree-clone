@@ -16,12 +16,37 @@ exports.deleteLink = exports.updateLink = exports.createLinks = exports.getUserL
 const asyncHandler_1 = __importDefault(require("../utils/asyncHandler"));
 const db_config_1 = __importDefault(require("../config/db.config"));
 const ApiResponse_1 = __importDefault(require("../utils/ApiResponse"));
+const getLinksInclude = () => {
+    return {
+        _count: {
+            select: {
+                analytics: true,
+            },
+        },
+        id: true,
+        title: true,
+        url: true,
+        order: true,
+        type: true,
+        active: true,
+        thumbnail: true,
+        thumbnail_layout: true,
+        prioritize: true,
+        animation_type: true,
+        show_time: true,
+        hide_time: true,
+        isLocked: true,
+        lock_type: true,
+        lock_data: true,
+    };
+};
 exports.getUserLinks = (0, asyncHandler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
     const userId = (_a = req.user) === null || _a === void 0 ? void 0 : _a.id;
     const links = yield db_config_1.default.link.findMany({
         where: { userId },
-        orderBy: { order: 'asc' }
+        select: getLinksInclude(),
+        orderBy: { order: "asc" },
     });
     res.json(new ApiResponse_1.default(200, links, "Link Fetched Successfully"));
 }));
@@ -36,14 +61,26 @@ exports.createLinks = (0, asyncHandler_1.default)((req, res) => __awaiter(void 0
             url,
             userId: (_a = req.user) === null || _a === void 0 ? void 0 : _a.id,
         },
+        select: getLinksInclude(),
     });
     res.json(new ApiResponse_1.default(200, link, "Link Created Successfully"));
 }));
 exports.updateLink = (0, asyncHandler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
     const linkId = req.params.id;
-    const { body: { order, title, type, url, active }, } = req;
-    let link = yield db_config_1.default.link.update({
+    const userId = (_a = req.user) === null || _a === void 0 ? void 0 : _a.id;
+    const { body: { order, title, type, url, active, thumbnail, thumbnail_layout, prioritize, animation_type, show_time, hide_time, isLocked, lock_type, redirect, lock_data, }, } = req;
+    const transactions = [];
+    if (prioritize) {
+        transactions.push(db_config_1.default.link.updateMany({
+            where: { userId },
+            data: {
+                prioritize: false,
+                animation_type: "NONE",
+            },
+        }));
+    }
+    const updateQuery = db_config_1.default.link.update({
         where: { id: linkId },
         data: {
             order,
@@ -51,10 +88,33 @@ exports.updateLink = (0, asyncHandler_1.default)((req, res) => __awaiter(void 0,
             type,
             url,
             active,
-            userId: (_a = req.user) === null || _a === void 0 ? void 0 : _a.id,
+            userId,
+            thumbnail,
+            thumbnail_layout,
+            show_time,
+            hide_time,
+            isLocked,
+            lock_type,
+            animation_type,
+            lock_data,
+            prioritize,
+            redirect_relation_user: redirect
+                ? {
+                    connect: {
+                        id: userId,
+                    },
+                }
+                : {
+                    disconnect: {
+                        id: userId
+                    }
+                },
         },
+        select: getLinksInclude(),
     });
-    res.json(new ApiResponse_1.default(200, link, "Link Updated Successfully"));
+    transactions.push(updateQuery);
+    const data = yield db_config_1.default.$transaction(transactions);
+    res.json(new ApiResponse_1.default(200, data[1], "Link Updated Successfully"));
 }));
 exports.deleteLink = (0, asyncHandler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const linkId = req.params.id;

@@ -164,7 +164,8 @@ exports.getUserData = (0, asyncHandler_1.default)((req, res) => __awaiter(void 0
             id: true,
             status: true,
             slug: true,
-            templateData: true
+            templateData: true,
+            redirect_link_id: true
         },
     });
     if (!user || (user === null || user === void 0 ? void 0 : user.status) !== 1) {

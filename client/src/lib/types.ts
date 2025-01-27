@@ -4,7 +4,8 @@ export interface User {
   email: string;
   slug: string | null;
   status: string;
-  image: string | null
+  image: string | null;
+  redirect_link_id: string| null
 }
 
 export interface Link {
@@ -14,23 +15,35 @@ export interface Link {
   order: number;
   type: LINKTYPE;
   active: boolean;
+  thumbnail?: string;
+  thumbnail_layout: THUMBNAIlSLAYOUT;
+  prioritize: boolean;
+  animation_type: LINK_ANIMATION_TYPE;
+  show_time?: string;
+  hide_time?: string;
+  isLocked: boolean;
+  lock_type: LINK_LOCK_TYPE;
+  lock_data: any
+  _count:{
+    analytics:number
+  }
 }
 
 export interface Profile {
-  id: string
+  id: string;
   name: string;
   image?: string;
   email: string;
   slug: string;
-  links: Link[]
+  links: Link[];
 }
 export interface Profile {
-  id: string
+  id: string;
   name: string;
   image?: string;
   email: string;
   slug: string;
-  links: Link[]
+  links: Link[];
 }
 export interface AnalyticsData {
   slugStats: {
@@ -47,7 +60,7 @@ export interface AnalyticsData {
     };
     linkId: string;
   }[];
-};
+}
 
 export enum LINKTYPE {
   OTHERS = "OTHERS",
@@ -59,21 +72,42 @@ export enum BACKGROUNDOPTIONS {
   GRADIENT = "GRADIENT",
   IMAGE = "IMAGE",
   VIDEO = "VIDEO",
-  POLKA = "POLKA" ,
+  POLKA = "POLKA",
   STRIPE = "STRIPE",
   WAVES = "WAVES",
-  ZIGZAG = "ZIGZAG"
+  ZIGZAG = "ZIGZAG",
 }
 
 export enum BUTTONOPTIONS {
   FILL = "FILL",
   OUTLINE = "OUTLINE",
   SOFT_SHADOW = "SOFT_SHADOW",
-  HARD_SHADOW = "HARD_SHADOW"
+  HARD_SHADOW = "HARD_SHADOW",
 }
 
 export enum BUTTONROUNDEDOPTIONS {
-  NO = "NO",
+  NONE = "NONE",
   MEDIUM = "MEDIUM",
-  HIGH = "HIGH"
+  HIGH = "HIGH",
+}
+
+export enum THUMBNAIlSLAYOUT {
+  COMPACT = "COMPACT",
+  LARGE = "LARGE",
+}
+
+export enum LINK_ANIMATION_TYPE {
+  NONE = "NONE",
+  BUZZ = "BUZZ",
+  WOBBLE = "WOBBLE",
+  POP = "POP",
+  SWIPE = "SWIPE",
+}
+
+export enum LINK_LOCK_TYPE {
+  NONE = "NONE",
+  SUBSCRIBE = "SUBSCRIBE",
+  CODE = "CODE",
+  SENSITIVE = "SENSITIVE",
+  DOB = "DOB",
 }

@@ -2,6 +2,7 @@ import { Request, NextFunction, Response } from "express";
 import asyncHandler from "../utils/asyncHandler.js";
 import jwt, { Secret } from "jsonwebtoken";
 import ApiError from "../utils/ApiError.js";
+import log from "../utils/logger.js";
 
 export const verifyJWT = asyncHandler(
   async (req: Request, _, next: NextFunction) => {
@@ -26,7 +27,8 @@ export const verifyJWT = asyncHandler(
       req.user = decodedInfo as any;
       next();
     } catch (error: any) {
-      throw new ApiError(401, error?.message || "Unauthorized Access!!!");
+      log.error(error?.message)
+      throw new ApiError(401,"Unauthorized Access!!!");
     }
   }
 );

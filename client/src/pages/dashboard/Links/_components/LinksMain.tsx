@@ -19,6 +19,7 @@ const LinksMain = () => {
   const { toast } = useToast();
   const dispatch = useAppDispatch();
   const { links } = useAppSelector((state) => state.links);
+  const { user } = useAppSelector((state) => state.auth);
   const { updateLink, deleteLink } = linkActions;
 
   const handleEdit = (
@@ -85,6 +86,7 @@ const LinksMain = () => {
           link={link}
           onEdit={handleEdit}
           onDelete={handleDelete}
+          isRedirectUrl={link.id === user?.redirect_link_id}
         />
       ))}
 
