@@ -34,6 +34,32 @@ exports.getProfileData = (0, asyncHandler_1.default)((req, res) => __awaiter(voi
                 links: {
                     where: {
                         active: true,
+                        AND: [
+                            {
+                                OR: [
+                                    {
+                                        show_time: {
+                                            lte: new Date(),
+                                        },
+                                    },
+                                    {
+                                        show_time: null,
+                                    },
+                                ],
+                            },
+                            {
+                                OR: [
+                                    {
+                                        hide_time: {
+                                            gte: new Date(),
+                                        },
+                                    },
+                                    {
+                                        hide_time: null,
+                                    },
+                                ],
+                            },
+                        ],
                     },
                     select: {
                         url: true,
@@ -57,7 +83,7 @@ exports.getProfileData = (0, asyncHandler_1.default)((req, res) => __awaiter(voi
             throw new ApiError_1.default(400, "Page not found");
         }
         if (data.redirect_link) {
-            res
+            return res
                 .status(200)
                 .json(new ApiResponse_1.default(200, { redirectTo: (_a = data === null || data === void 0 ? void 0 : data.redirect_link) === null || _a === void 0 ? void 0 : _a.url }, "Fetched profile successfully"));
         }

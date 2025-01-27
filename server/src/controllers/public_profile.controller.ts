@@ -18,10 +18,36 @@ export const getProfileData = asyncHandler(
           image: true,
           slug: true,
           templateData: true,
-          redirect_link:true,
+          redirect_link: true,
           links: {
             where: {
               active: true,
+              AND: [
+                {
+                  OR: [
+                    {
+                      show_time: {
+                        lte: new Date(),
+                      },
+                    },
+                    {
+                      show_time: null,
+                    },
+                  ],
+                },
+                {
+                  OR: [
+                    {
+                      hide_time: {
+                        gte: new Date(),
+                      },
+                    },
+                    {
+                      hide_time: null,
+                    },
+                  ],
+                },
+              ],
             },
             select: {
               url: true,
@@ -46,10 +72,16 @@ export const getProfileData = asyncHandler(
         throw new ApiError(400, "Page not found");
       }
 
-      if(data.redirect_link){
-        res
-        .status(200)
-        .json(new ApiResponse(200, {redirectTo:data?.redirect_link?.url}, "Fetched profile successfully"));
+      if (data.redirect_link) {
+        return res
+          .status(200)
+          .json(
+            new ApiResponse(
+              200,
+              { redirectTo: data?.redirect_link?.url },
+              "Fetched profile successfully"
+            )
+          );
       }
 
       res

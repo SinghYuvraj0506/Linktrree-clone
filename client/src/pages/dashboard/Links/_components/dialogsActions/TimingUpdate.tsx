@@ -53,6 +53,22 @@ const TimingUpdate = ({ link }: Props) => {
     }
   };
 
+  const removeScheduling = () => {
+    setShowTime(null);
+    setHideTime(null);
+
+    dispatch(
+      updateLink({
+        id: link.id,
+        obj: {
+          show_time: null,
+          hide_time: null,
+        },
+      })
+    );
+  };
+
+
   return (
     <div className="space-y-6">
       {/* Show Time */}
@@ -99,6 +115,12 @@ const TimingUpdate = ({ link }: Props) => {
 
       {/* Submit Button */}
       <div className="flex justify-end gap-2">
+        <LoadingButton
+          type="button"
+          loading={funcLoading}
+          onClick={removeScheduling}
+          text="Remove Scheduling"
+        />
         <LoadingButton
           type="button"
           loading={funcLoading}
