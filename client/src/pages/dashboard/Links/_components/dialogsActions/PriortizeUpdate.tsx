@@ -48,7 +48,6 @@ const PrioritizeLinkUpdate = ({ link }: Props) => {
             checked={isPriority}
             onCheckedChange={(checked) => setIsPriority(!!checked)}
             id="priority"
-            disabled={link?.prioritize}
           />
           <label htmlFor="priority" className="text-sm font-medium">
             Prioritize This Link

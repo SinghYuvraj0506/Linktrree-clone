@@ -89,7 +89,7 @@ export const buttonStyleGenerator = ({
 
   // Set border radius based on rounded_type
   switch (rounded_type) {
-    case BUTTONROUNDEDOPTIONS.NO:
+    case BUTTONROUNDEDOPTIONS.NONE:
       style.borderRadius = "0px";
       break;
     case BUTTONROUNDEDOPTIONS.MEDIUM:

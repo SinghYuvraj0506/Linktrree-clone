@@ -114,7 +114,7 @@ exports.updateLink = (0, asyncHandler_1.default)((req, res) => __awaiter(void 0,
     });
     transactions.push(updateQuery);
     const data = yield db_config_1.default.$transaction(transactions);
-    res.json(new ApiResponse_1.default(200, data[1], "Link Updated Successfully"));
+    res.json(new ApiResponse_1.default(200, prioritize ? data[1] : data[0], "Link Updated Successfully"));
 }));
 exports.deleteLink = (0, asyncHandler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const linkId = req.params.id;

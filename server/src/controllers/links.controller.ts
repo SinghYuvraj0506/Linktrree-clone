@@ -135,9 +135,8 @@ export const updateLink = asyncHandler(async (req: Request, res: Response) => {
   })
 
   transactions.push(updateQuery)
-  
   const data = await prisma.$transaction(transactions);
-  res.json(new ApiResponse(200, data[1], "Link Updated Successfully"));
+  res.json(new ApiResponse(200, prioritize ? data[1] : data[0], "Link Updated Successfully"));
 });
 
 export const deleteLink = asyncHandler(async (req: Request, res: Response) => {
