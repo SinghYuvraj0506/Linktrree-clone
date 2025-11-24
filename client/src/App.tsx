@@ -14,6 +14,7 @@ import AuthLayout from "./layouts/Authlayout";
 import ProfilePage from "./pages/public/ProfilePage";
 import Analytics from "./pages/dashboard/Analytics";
 import Appearance from "./pages/dashboard/Appearance/Appearance";
+import Layout from "./pages/dashboard/Layout/Layout";
 
 const router = (isAuthenticated: boolean, loading: boolean) => {
   return createBrowserRouter([
@@ -78,6 +79,10 @@ const router = (isAuthenticated: boolean, loading: boolean) => {
         {
           path: "appearance",
           element: <Appearance />,
+        },
+        {
+          path: "layout",
+          element: <Layout />,
         },
       ],
     },

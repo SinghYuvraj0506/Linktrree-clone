@@ -1,6 +1,6 @@
 import MobilePreview from "@/components/global/MobilePreview";
 import { Sidebar, sidebarOptionType } from "@/components/global/Sidebar";
-import { ChartBar, Link, Palette } from "lucide-react";
+import { ChartBar, LayoutPanelLeft, Link, Palette } from "lucide-react";
 import { Outlet, useLocation } from "react-router-dom";
 
 const SidebarOptions: sidebarOptionType[] = [
@@ -8,6 +8,11 @@ const SidebarOptions: sidebarOptionType[] = [
     title: "Links",
     navigateTo: "/dashboard",
     icon: <Link className="h-4 w-4" />,
+  },
+  {
+    title: "Layout",
+    navigateTo: "/dashboard/layout",
+    icon: <LayoutPanelLeft className="h-4 w-4" />,
   },
   {
     title: "Appearance",
